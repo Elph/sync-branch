@@ -1,17 +1,17 @@
 {
-  "name": "javascript-action",
+  "name": "sync-branch",
   "version": "1.0.0",
-  "description": "JavaScript Action Template",
+  "description": "JavaScript Action that updates branches based on another branch changes",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
     "prepare": "ncc build index.js -o dist --source-map",
     "test": "jest",
-    "all": "npm run lint && npm run prepare && npm run test"
+    "all": "npm run lint && npm run prepare"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/javascript-action.git"
+    "url": "git+https://github.com/Elph/sync-branch.git"
   },
   "keywords": [
     "GitHub",
@@ -21,11 +21,12 @@
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/actions/javascript-action/issues"
+    "url": "https://github.com/Elph/sync-branch/issues"
   },
-  "homepage": "https://github.com/actions/javascript-action#readme",
+  "homepage": "https://github.com/Elph/sync-branch#readme",
   "dependencies": {
-    "@actions/core": "^1.1.1"
+    "@actions/core": "^1.2.4",
+    "@actions/github": "^2.2.0"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.24.0",
