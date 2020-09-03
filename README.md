@@ -1,4 +1,4 @@
-# Sync Branc Action
+# Sync Branch Action
 
 Github action that will create pull request when a defined branch has changed. It will use an intermediate branch
 If multiple changes on the sourc branch happens it will update the intermediate branch
