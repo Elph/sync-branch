@@ -13,9 +13,6 @@ inputs:
   TO_BRANCH:
     description: "Branch to make the pull-request against"
     required: true
-  PR_SUFFIX:
-    description: "Suffix to be used to name the intermediate branch, if no provided will be -sync"
-    required: false
 outputs:
   PULL_REQUEST_URL:
     description: "URL for either the generated pull request or the currently open one"

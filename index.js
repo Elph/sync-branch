@@ -6,11 +6,10 @@ async function run() {
     const fromBranch = core.getInput("FROM_BRANCH", { required: true });
     const toBranch = core.getInput("TO_BRANCH", { required: true });
     const githubToken = core.getInput("GITHUB_TOKEN", { required: true });
-    const prSuffix = core.getInput("PR_SUFFIX") || '-sync';
 
     const prTitle = `sync: ${fromBranch} to ${toBranch}`;
     const prBody = `New code has just landed in \`${fromBranch}\`, so let's bring \`${toBranch}\` up to speed!`;
-    const prBranchName = `${fromBranch}${prSuffix}`;
+    const prBranchName = `sync-${toBranch}-from-${fromBranch}`;
 
     console.log(`Making a pull request to '${toBranch}' from '${fromBranch}' using branch '${prBranchName}'.`);
 
