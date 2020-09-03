@@ -1,13 +1,26 @@
-name: 'Wait'
-description: 'Wait a designated number of milliseconds'
+name: "Sync Branch"
+description: "GitHub Action that creates a pull request to sync a updated branch back to one or more other branches using an intermediate branch."
+branding:
+  icon: wind
+  color: gray-dark
 inputs:
-  milliseconds:  # id of input
-    description: 'number of milliseconds to wait'
+  GITHUB_TOKEN:
+    description: "User token to be associated with this pull request."
     required: true
-    default: '1000'
+  FROM_BRANCH:
+    description: "Branch from make pull-request from"
+    required: true
+  TO_BRANCH:
+    description: "Branch to make the pull-request against"
+    required: true
+  PR_SUFFIX:
+    description: "Suffix to be used to name the intermediate branch, if no provided will be -sync"
+    required: false
 outputs:
-  time: # output will be available to future steps
-    description: 'The message to output'
+  PULL_REQUEST_URL:
+    description: "URL for either the generated pull request or the currently open one"
+  PULL_REQUEST_NUMBER:
+    description: "Pull request number from generated pull request or the currently open one"
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: "node12"
+  main: "dist/index.js"
