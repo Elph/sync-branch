@@ -13,6 +13,7 @@ with:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   FROM_BRANCH: "master"
   TO_BRANCH: "develop"
+  REVIEWERS: "user1,user2"
 ```
 
 See the [actions tab](https://github.com/Elph/sync-branch/actions) for runs of this action! :rocket:
