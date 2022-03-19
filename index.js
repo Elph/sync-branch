@@ -23,7 +23,7 @@ async function run() {
     const prTitle = `sync: ${opt.fromBranch} to ${opt.toBranch}`;
     const prBody = `New code has just landed in \`${opt.fromBranch}\`, so let's bring \`${opt.toBranch}\` up to speed!`;
     
-    console.log(`Making a pull request to '${opt.toBranch}' from '${opt.fromBranch}' using branch '${opt.prBranchName}'.`);
+    console.log(`Making a pull request to '${opt.toBranch}' from '${opt.fromBranch}' using branch '${opt.prBranchName}'. wow!`);
 
     const {
       payload: { repository }
