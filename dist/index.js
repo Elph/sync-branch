@@ -8673,7 +8673,7 @@ async function run() {
       if(opt.reviewers.length > 0) {
 
         // the call in octokit rest requestReviewers seems not to exist, so its calling directly the method
-        await octokit.rest.request('POST /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers', {
+        await octokit.request('POST /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers', {
           owner: repository.owner.login,
           repo: repository.name,
           pull_number: pullRequest.number,
