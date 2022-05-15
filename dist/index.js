@@ -9628,6 +9628,8 @@ async function hasChanges(octokit, repository, opt) {
     base: opt.toBranch,
     head:  opt.prBranchName
   });
+  
+  console.log(comparison);
 
   return comparison.files.length === 0;
 }
