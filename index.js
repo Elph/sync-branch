@@ -87,9 +87,7 @@ async function hasChanges(octokit, repository, opt) {
     head:  opt.prBranchName
   });
   
-  console.log(comparison);
-
-  return comparison.files.length === 0;
+  return comparison.data.files.length === 0;
 }
 
 async function getCurrentPullRequest(octokit, repository, opt){

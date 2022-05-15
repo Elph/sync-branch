@@ -9622,16 +9622,14 @@ async function updatePullRequest(octokit, currentPull, repository, opt) {
 
 async function hasChanges(octokit, repository, opt) {
   
-  const comparison = octokit.rest.repos.compareCommits({
+  const comparison = await octokit.rest.repos.compareCommits({
     owner: repository.owner.login,
     repo: repository.name,
     base: opt.toBranch,
     head:  opt.prBranchName
   });
   
-  console.log(comparison);
-
-  return comparison.files.length === 0;
+  return comparison.data.files.length === 0;
 }
 
 async function getCurrentPullRequest(octokit, repository, opt){
