@@ -9629,6 +9629,9 @@ async function hasChanges(octokit, repository, opt) {
     head:  opt.prBranchName
   });
   
+  console.log(`There are ${comparison.data.files} files changes` )
+  console.log(comparison.data )
+  
   return comparison.data.files.length === 0;
 }
 
