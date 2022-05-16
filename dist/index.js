@@ -9371,6 +9371,65 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 4351:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const parseOptions = __nccwpck_require__(2720);
+const createPullRequest = __nccwpck_require__(2577);
+const updatePullRequest = __nccwpck_require__(4256);
+const hasChanges = __nccwpck_require__(7466);
+const getCurrentPullRequest = __nccwpck_require__(6861);
+
+module.exports = {
+    parseOptions,
+    createPullRequest,
+    updatePullRequest,
+    hasChanges,
+    getCurrentPullRequest,
+}
+
+/***/ }),
+
+/***/ 2577:
+/***/ ((module) => {
+
+module.exports = eval("require")("./src/createPullRequest.js");
+
+
+/***/ }),
+
+/***/ 6861:
+/***/ ((module) => {
+
+module.exports = eval("require")("./src/getCurrentPullRequest.js");
+
+
+/***/ }),
+
+/***/ 7466:
+/***/ ((module) => {
+
+module.exports = eval("require")("./src/hasChanges.js");
+
+
+/***/ }),
+
+/***/ 2720:
+/***/ ((module) => {
+
+module.exports = eval("require")("./src/parseOptions.js");
+
+
+/***/ }),
+
+/***/ 4256:
+/***/ ((module) => {
+
+module.exports = eval("require")("./src/updatePullrequest.js");
+
+
+/***/ }),
+
 /***/ 2877:
 /***/ ((module) => {
 
@@ -9543,110 +9602,13 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
 
-function parseOptions(){
-  const fromBranch = core.getInput("FROM_BRANCH", { required: true });
-    const toBranch = core.getInput("TO_BRANCH", { required: true });
-    const githubToken = core.getInput("GITHUB_TOKEN", { required: true });
-    const reviewersStr = core.getInput("REVIEWERS", { required: false });
-    return {
-      fromBranch: fromBranch,
-      toBranch: toBranch,
-      reviewers: reviewersStr ? reviewersStr.split(',').map((item) => item.trim()) : [],
-      githubToken: githubToken,
-      prBranchName: `sync-${toBranch}-from-${fromBranch}`
-    }
-}
-
-async function createPullRequest(octokit, repository, opt) {
-
-  const prTitle = `sync: ${opt.fromBranch} to ${opt.toBranch}`;
-  const prBody = `New code has just landed in \`${opt.fromBranch}\`, so let's bring \`${opt.toBranch}\` up to speed!`;
- 
-  const { data: fromRef } = await octokit.rest.git.getRef({
-    owner: repository.owner.login,
-    repo: repository.name,
-    ref: `heads/${opt.fromBranch}`,
-  });
-
-  await octokit.rest.git.createRef({
-    owner: repository.owner.login,
-    repo: repository.name,
-    ref: `refs/heads/${opt.prBranchName}`,
-    sha: fromRef.object.sha
-  });
-
-  const { data: pullRequest } = await octokit.rest.pulls.create({
-    owner: repository.owner.login,
-    repo: repository.name,
-    head: opt.prBranchName,
-    base: opt.toBranch,
-    title: prTitle,
-    body: prBody,
-    draft: false
-  });
-
-  console.log(
-    `Pull request (${pullRequest.number}) successful! You can view it here: ${pullRequest.url}.`
-  );
-
-  if(opt.reviewers.length > 0) {
-
-    // the call in octokit rest requestReviewers seems not to exist, so its calling directly the method
-    await octokit.request('POST /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers', {
-      owner: repository.owner.login,
-      repo: repository.name,
-      pull_number: pullRequest.number,
-      reviewers: opt.reviewers
-    });
-
-  }
-
-  return pullRequest;
-}
-
-async function updatePullRequest(octokit, currentPull, repository, opt) {
-  
-  console.log(
-    `Updating existing pull request (${currentPull.number}) to '${opt.toBranch}' from '${opt.prBranchName}'.`,
-    `Merging last version from '${opt.toBranch}' into intermediate '${opt.prBranchName}'`,
-    `You can view it here: ${currentPull.url}`
-  );
-  
-  await octokit.rest.repos.merge({
-    owner: repository.owner.login,
-    repo: repository.name,
-    base: opt.prBranchName,
-    head: opt.fromBranch,
-  });
-}
-
-async function hasChanges(octokit, repository, opt) {
-  
-  const comparison = await octokit.rest.repos.compareCommits({
-    owner: repository.owner.login,
-    repo: repository.name,
-    base: opt.toBranch,
-    head:  opt.prBranchName
-  });
-
-  console.log(`There are ${comparison.data.files.length} files changes` )
-  
-  return comparison.data.files.length > 0;
-}
-
-async function getCurrentPullRequest(octokit, repository, opt){
-  
-  const { data: pullRequests } = await octokit.rest.pulls.list({
-    owner: repository.owner.name,
-    repo: repository.name
-  });
-
-  const pullRequest = pullRequests.find(pr => {
-    return pr.head.ref === opt.prBranchName && pr.base.ref === opt.toBranch;
-  });
-
-  return pullRequest;
-}
+const {
+  parseOptions,
+  createPullRequest,
+  updatePullRequest,
+  hasChanges,
+  getCurrentPullRequest
+} = __nccwpck_require__(4351);
 
 async function run() {
   try {
