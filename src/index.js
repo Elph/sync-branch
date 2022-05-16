@@ -1,8 +1,8 @@
-const parseOptions = require('./src/parseOptions.js');
-const createPullRequest = require('./src/createPullRequest.js');
-const updatePullRequest = require('./src/updatePullrequest.js');
-const hasChanges = require('./src/hasChanges.js');
-const getCurrentPullRequest = require('./src/getCurrentPullRequest.js');
+const parseOptions = require('./parseOptions.js');
+const createPullRequest = require('./createPullRequest.js');
+const updatePullRequest = require('./updatePullrequest.js');
+const hasChanges = require('./hasChanges.js');
+const getCurrentPullRequest = require('./getCurrentPullRequest.js');
 
 module.exports = {
     parseOptions,
