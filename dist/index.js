@@ -9628,11 +9628,10 @@ async function hasChanges(octokit, repository, opt) {
     base: opt.toBranch,
     head:  opt.prBranchName
   });
+
+  console.log(`There are ${comparison.data.files.length} files changes` )
   
-  console.log(`There are ${comparison.data.files} files changes` )
-  console.log(comparison.data )
-  
-  return comparison.data.files.length === 0;
+  return comparison.data.files.length > 0;
 }
 
 async function getCurrentPullRequest(octokit, repository, opt){
