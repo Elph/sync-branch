@@ -93,16 +93,17 @@ async function hasChanges(octokit, repository, opt) {
 }
 
 async function getCurrentPullRequest(octokit, repository, opt){
-  const { data: currentPulls } = await octokit.rest.pulls.list({
+  
+  const { data: pullRequests } = await octokit.rest.pulls.list({
     owner: repository.owner.name,
     repo: repository.name
   });
 
-  const currentPull = currentPulls.find(pull => {
-    return pull.head.ref === opt.prBranchName && pull.base.ref === opt.toBranch;
+  const pullRequest = pullRequests.find(pr => {
+    return pr.head.ref === opt.prBranchName && pr.base.ref === opt.toBranch;
   });
 
-  return currentPull;
+  return pullRequest;
 }
 
 async function run() {
@@ -131,11 +132,11 @@ async function run() {
 
     if (!currentPull) {
 
-      currentPull = await createPullRequest();
+      currentPull = await createPullRequest(octokit, repository, opt);
 
     } else {
 
-      await updatePullRequest()
+      await updatePullRequest(octokit, currentPull, repository, opt)
       
     }
 
