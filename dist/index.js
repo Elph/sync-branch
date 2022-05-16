@@ -9461,7 +9461,7 @@ async function hasChanges(octokit, repository, opt) {
         head: opt.prBranchName
     });
 
-    console.log(`There are ${comparison.data.files.length} files changes`)
+    console.log(`There are ${comparison.data.files.length} files changes between ${opt.toBranch} and ${opt.prBranchName}`)
 
     return comparison.data.files.length > 0;
 }
@@ -9473,19 +9473,60 @@ module.exports = hasChanges;
 /***/ 4351:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
+
+const core = __nccwpck_require__(2186);
+const github = __nccwpck_require__(5438);
+
 const parseOptions = __nccwpck_require__(9566);
 const createPullRequest = __nccwpck_require__(666);
 const updatePullRequest = __nccwpck_require__(1221);
 const hasChanges = __nccwpck_require__(5858);
 const getCurrentPullRequest = __nccwpck_require__(8847);
 
-module.exports = {
-    parseOptions,
-    createPullRequest,
-    updatePullRequest,
-    hasChanges,
-    getCurrentPullRequest,
+
+async function run() {
+    try {
+
+        const opt = parseOptions();
+
+        console.log(`Making a pull request to '${opt.toBranch}' from '${opt.fromBranch}' using branch '${opt.prBranchName}'.`);
+
+        const {
+            payload: { repository }
+        } = github.context;
+
+        const octokit = github.getOctokit(opt.githubToken);
+
+        const hasChanged = await hasChanges(octokit, repository, opt);
+        if (!hasChanged) {
+            console.log(
+                `There are no file changes between '${opt.toBranch}' and '${opt.prBranchName}', so we will just ignore this one`
+            );
+
+            return;
+        }
+
+        let currentPull = await getCurrentPullRequest(octokit, repository, opt);
+
+        if (!currentPull) {
+
+            currentPull = await createPullRequest(octokit, repository, opt);
+
+        } else {
+
+            await updatePullRequest(octokit, currentPull, repository, opt)
+
+        }
+
+        core.setOutput("PULL_REQUEST_URL", currentPull.url.toString());
+        core.setOutput("PULL_REQUEST_NUMBER", currentPull.number.toString());
+
+    } catch (error) {
+        core.setFailed(error.message);
+    }
 }
+
+module.exports = run;
 
 /***/ }),
 
@@ -9705,59 +9746,9 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-const core = __nccwpck_require__(2186);
-const github = __nccwpck_require__(5438);
+const run = __nccwpck_require__(4351);
 
-const {
-  parseOptions,
-  createPullRequest,
-  updatePullRequest,
-  hasChanges,
-  getCurrentPullRequest
-} = __nccwpck_require__(4351);
-
-async function run() {
-  try {
-
-    const opt = parseOptions();
-    
-    console.log(`Making a pull request to '${opt.toBranch}' from '${opt.fromBranch}' using branch '${opt.prBranchName}'.`);
-
-    const {
-      payload: { repository }
-    } = github.context;
-
-    const octokit = github.getOctokit(opt.githubToken);
-    
-    const hasChanged = await hasChanges(octokit, repository, opt);
-    if(!hasChanged){
-      console.log(
-        `There are no file changes between '${opt.toBranch}' and '${opt.prBranchName}', so we will just ignore this one`
-      );
-
-      return;
-    }
-    
-    let currentPull = await getCurrentPullRequest(octokit, repository, opt);
-
-    if (!currentPull) {
-
-      currentPull = await createPullRequest(octokit, repository, opt);
-
-    } else {
-
-      await updatePullRequest(octokit, currentPull, repository, opt)
-      
-    }
-
-    core.setOutput("PULL_REQUEST_URL", currentPull.url.toString());
-    core.setOutput("PULL_REQUEST_NUMBER", currentPull.number.toString());
-
-  } catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
+// Do the magic!
 run();
 
 })();

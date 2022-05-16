@@ -7,7 +7,7 @@ async function hasChanges(octokit, repository, opt) {
         head: opt.prBranchName
     });
 
-    console.log(`There are ${comparison.data.files.length} files changes`)
+    console.log(`There are ${comparison.data.files.length} files changes between ${opt.toBranch} and ${opt.prBranchName}`)
 
     return comparison.data.files.length > 0;
 }
