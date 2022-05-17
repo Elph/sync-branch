@@ -6,6 +6,7 @@ function parseOptions() {
     const toBranch = core.getInput("TO_BRANCH", { required: true });
     const githubToken = core.getInput("GITHUB_TOKEN", { required: true });
     const reviewersStr = core.getInput("REVIEWERS", { required: false });
+
     return {
         fromBranch: fromBranch,
         toBranch: toBranch,
