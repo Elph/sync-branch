@@ -1,9 +1,9 @@
-async function updatePullRequest(octokit, currentPull, repository, opt) {
+async function updatePullRequest(octokit, pullRequest, repository, opt) {
 
     console.log(
-        `Updating existing pull request (${currentPull.number}) to '${opt.toBranch}' from '${opt.prBranchName}'.`,
+        `Updating existing pull request (${pullRequest.number}) to '${opt.toBranch}' from '${opt.prBranchName}'.`,
         `Merging last version from '${opt.toBranch}' into intermediate '${opt.prBranchName}'`,
-        `You can view it here: ${currentPull.url}`
+        `You can view it here: ${pullRequest.url}`
     );
 
     await octokit.rest.repos.merge({

@@ -2,7 +2,7 @@
 async function getCurrentPullRequest(octokit, repository, opt) {
 
     const { data: pullRequests } = await octokit.rest.pulls.list({
-        owner: repository.owner.name,
+        owner: repository.owner.login,
         repo: repository.name
     });
 
