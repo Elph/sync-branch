@@ -9434,7 +9434,7 @@ async function createPullRequest(octokit, repository, opt) {
 async function getCurrentPullRequest(octokit, repository, opt) {
 
     const { data: pullRequests } = await octokit.rest.pulls.list({
-        owner: repository.owner.name,
+        owner: repository.owner.login,
         repo: repository.name
     });
 
@@ -9483,43 +9483,32 @@ const updatePullRequest = __nccwpck_require__(1221);
 const hasChanges = __nccwpck_require__(5858);
 const getCurrentPullRequest = __nccwpck_require__(8847);
 
-
 async function run() {
     try {
 
         const opt = parseOptions();
+        const { payload: { repository } } = github.context;
+        const octokit = github.getOctokit(opt.githubToken);
 
         console.log(`Making a pull request to '${opt.toBranch}' from '${opt.fromBranch}' using branch '${opt.prBranchName}'.`);
-
-        const {
-            payload: { repository }
-        } = github.context;
-
-        const octokit = github.getOctokit(opt.githubToken);
 
         const hasChanged = await hasChanges(octokit, repository, opt);
         if (!hasChanged) {
             console.log(
                 `There are no file changes between '${opt.toBranch}' and '${opt.prBranchName}', so we will just ignore this one`
             );
-
             return;
         }
 
-        let currentPull = await getCurrentPullRequest(octokit, repository, opt);
-
-        if (!currentPull) {
-
-            currentPull = await createPullRequest(octokit, repository, opt);
-
+        let pullRequest = await getCurrentPullRequest(octokit, repository, opt);
+        if (!pullRequest) {
+            pullRequest = await createPullRequest(octokit, repository, opt);
         } else {
-
-            await updatePullRequest(octokit, currentPull, repository, opt)
-
+            await updatePullRequest(octokit, pullRequest, repository, opt)
         }
 
-        core.setOutput("PULL_REQUEST_URL", currentPull.url.toString());
-        core.setOutput("PULL_REQUEST_NUMBER", currentPull.number.toString());
+        core.setOutput("PULL_REQUEST_URL", pullRequest.url.toString());
+        core.setOutput("PULL_REQUEST_NUMBER", pullRequest.number.toString());
 
     } catch (error) {
         core.setFailed(error.message);
@@ -9541,6 +9530,7 @@ function parseOptions() {
     const toBranch = core.getInput("TO_BRANCH", { required: true });
     const githubToken = core.getInput("GITHUB_TOKEN", { required: true });
     const reviewersStr = core.getInput("REVIEWERS", { required: false });
+
     return {
         fromBranch: fromBranch,
         toBranch: toBranch,
@@ -9557,12 +9547,12 @@ module.exports = parseOptions;
 /***/ 1221:
 /***/ ((module) => {
 
-async function updatePullRequest(octokit, currentPull, repository, opt) {
+async function updatePullRequest(octokit, pullRequest, repository, opt) {
 
     console.log(
-        `Updating existing pull request (${currentPull.number}) to '${opt.toBranch}' from '${opt.prBranchName}'.`,
+        `Updating existing pull request (${pullRequest.number}) to '${opt.toBranch}' from '${opt.prBranchName}'.`,
         `Merging last version from '${opt.toBranch}' into intermediate '${opt.prBranchName}'`,
-        `You can view it here: ${currentPull.url}`
+        `You can view it here: ${pullRequest.url}`
     );
 
     await octokit.rest.repos.merge({

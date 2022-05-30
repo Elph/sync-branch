@@ -23,7 +23,7 @@ describe('getCurrentPullRequest', () => {
 
     it('returns pullrequest when exist one', async () => {
         // Arrange
-        octokit.rest.pulls.list = jest.fn((o) => {
+        octokit.rest.pulls.list = jest.fn(() => {
             return {
                 data: [
                     { head: { ref: 'sync-staging-from-master' }, base: { ref: 'staging' } },
@@ -46,7 +46,7 @@ describe('getCurrentPullRequest', () => {
 
     it('returns empty when doesn\'t exist one', async () => {
         // Arrange
-        octokit.rest.pulls.list = jest.fn((o) => {
+        octokit.rest.pulls.list = jest.fn(() => {
             return {
                 data: [
                     { head: { ref: 'sync-staging-from-master2' }, base: { ref: 'staging2' } },

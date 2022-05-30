@@ -5,11 +5,11 @@ const github = require("@actions/github");
 
 const run = require('../src/index');
 
-const parseOptions = require('../src/parseOptions.js');
-const createPullRequest = require('../src/createPullRequest.js');
-const updatePullRequest = require('../src/updatePullrequest.js');
-const hasChanges = require('../src/hasChanges.js');
-const getCurrentPullRequest = require('../src/getCurrentPullRequest.js');
+// const parseOptions = require('../src/parseOptions.js');
+// const createPullRequest = require('../src/createPullRequest.js');
+// const updatePullRequest = require('../src/updatePullrequest.js');
+// const hasChanges = require('../src/hasChanges.js');
+// const getCurrentPullRequest = require('../src/getCurrentPullRequest.js');
 
 // const repository = {
 //     owner: { login: 'elph' },

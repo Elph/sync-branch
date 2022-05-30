@@ -24,7 +24,7 @@ describe('updatePullrequest', () => {
 
     it('calls merge', async () => {
         // Arrange
-        octokit.rest.repos.merge = jest.fn((o) => { return; });
+        octokit.rest.repos.merge = jest.fn(() => { return; });
         const pr = { number: '1234'};
 
         // Act

@@ -23,7 +23,7 @@ describe('hasChanges', () => {
 
     it('returns true when comparison has file changes', async () => {
         // Arrange
-        octokit.rest.repos.compareCommits = jest.fn((o) => {
+        octokit.rest.repos.compareCommits = jest.fn(() => {
             return { data: { files: [{}, {}] } };
         });
 
@@ -43,7 +43,7 @@ describe('hasChanges', () => {
 
     it('returns false when comparison has file changes', async () => {
         // Arrange
-        octokit.rest.repos.compareCommits = jest.fn((o) => {
+        octokit.rest.repos.compareCommits = jest.fn(() => {
             return { data: { files: [] } };
         });
 

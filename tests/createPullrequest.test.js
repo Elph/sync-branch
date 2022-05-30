@@ -25,9 +25,9 @@ describe('createPullRequest', () => {
 
     it('creates pullrequest', async () => {
         // Arrange
-        octokit.rest.git.getRef = jest.fn((o) => { return { data: { object: { sha: '123456789' } } }; });
+        octokit.rest.git.getRef = jest.fn(() => { return { data: { object: { sha: '123456789' } } }; });
         octokit.rest.git.createRef = jest.fn();
-        octokit.rest.pulls.create = jest.fn((o) => { return { data: { number: '1234' } }; });
+        octokit.rest.pulls.create = jest.fn(() => { return { data: { number: '1234' } }; });
 
         // Act
         const pr = await createPullRequest(octokit, repository, opt);
@@ -61,9 +61,9 @@ describe('createPullRequest', () => {
 
     it('creates pullrequest and assigns reviewers', async () => {
         // Arrange
-        octokit.rest.git.getRef = jest.fn((o) => { return { data: { object: { sha: '123456789' } } }; });
+        octokit.rest.git.getRef = jest.fn(() => { return { data: { object: { sha: '123456789' } } }; });
         octokit.rest.git.createRef = jest.fn();
-        octokit.rest.pulls.create = jest.fn((o) => { return { data: { number: '1234' } }; });
+        octokit.rest.pulls.create = jest.fn(() => { return { data: { number: '1234' } }; });
         octokit.request = jest.fn();
         opt.reviewers = ['elph']
 
