@@ -1,4 +1,4 @@
-name: Sync
+name: Run checks
 on:
   pull_request:
     branches:
