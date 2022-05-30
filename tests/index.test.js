@@ -31,14 +31,14 @@ describe('run', () => {
         jest.spyOn(core, 'setFailed');
         github.context = { repository: {} };
         //jest.spyOn(github, 'context').mockImplementation((name) => inputs[name]);
-        jest.mock('../src/parseOptions.js', () => {
-            return {
-                toBranch: 'staging',
-                fromBranch: 'master',
-                prBranchName: 'sync-staging-from-master',
-                reviewers: ['elph']
-            };
-        });
+        // jest.mock('../src/parseOptions.js', () => {
+        //     return {
+        //         toBranch: 'staging',
+        //         fromBranch: 'master',
+        //         prBranchName: 'sync-staging-from-master',
+        //         reviewers: ['elph']
+        //     };
+        // });
     });
 
     beforeEach(() => {
