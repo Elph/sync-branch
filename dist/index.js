@@ -9458,10 +9458,10 @@ async function hasChanges(octokit, repository, opt) {
         owner: repository.owner.login,
         repo: repository.name,
         base: opt.toBranch,
-        head: opt.prBranchName
+        head: opt.fromBranch
     });
 
-    console.log(`There are ${comparison.data.files.length} files changes between ${opt.toBranch} and ${opt.prBranchName}`)
+    console.log(`There are ${comparison.data.files.length} files changes between ${opt.toBranch} and ${opt.fromBranch}`)
 
     return comparison.data.files.length > 0;
 }

@@ -9,6 +9,7 @@ const repository = {
 };
 const opt = {
     toBranch: 'staging',
+    fromBranch: 'master',
     prBranchName: 'sync-staging-from-master'
 };
 let octokit = { rest: { repos: {} } }
@@ -37,7 +38,7 @@ describe('hasChanges', () => {
                 owner: 'elph',
                 repo: 'repository-name',
                 base: 'staging',
-                head: 'sync-staging-from-master'
+                head: 'master'
             });
     });
 
@@ -57,7 +58,7 @@ describe('hasChanges', () => {
                 owner: 'elph',
                 repo: 'repository-name',
                 base: 'staging',
-                head: 'sync-staging-from-master'
+                head: 'master'
             });
     });
 });
