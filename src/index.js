@@ -4,7 +4,7 @@ const github = require("@actions/github");
 
 const parseOptions = require('./parseOptions.js');
 const createPullRequest = require('./createPullRequest.js');
-const updatePullRequest = require('./updatePullrequest.js');
+const updatePullRequest = require('./updatePullRequest.js');
 const hasChanges = require('./hasChanges.js');
 const getCurrentPullRequest = require('./getCurrentPullRequest.js');
 
