@@ -1,7 +1,7 @@
 
 require('jest');
 
-const updatePullrequest = require('../src/updatePullrequest');
+const updatePullRequest = require('../src/updatePullRequest');
 
 const repository = {
     owner: { login: 'elph' },
@@ -15,7 +15,7 @@ const opt = {
 let octokit = { rest: { repos: {} } }
 
 //describe divide our tests in sections
-describe('updatePullrequest', () => {
+describe('updatePullRequest', () => {
 
     afterAll(() => {
         // Restore
@@ -28,7 +28,7 @@ describe('updatePullrequest', () => {
         const pr = { number: '1234'};
 
         // Act
-        await updatePullrequest(octokit, pr, repository, opt);
+        await updatePullRequest(octokit, pr, repository, opt);
 
         // Assert
         expect(octokit.rest.repos.merge)

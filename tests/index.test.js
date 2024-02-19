@@ -1,106 +1,111 @@
-
-require('jest');
 const core = require("@actions/core");
 const github = require("@actions/github");
-
 const run = require('../src/index');
+jest.mock('../src/parseOptions');
+jest.mock('../src/createPullRequest');
+jest.mock('../src/updatePullRequest');
+jest.mock('../src/hasChanges');
+jest.mock('../src/getCurrentPullRequest');
 
-// const parseOptions = require('../src/parseOptions.js');
-// const createPullRequest = require('../src/createPullRequest.js');
-// const updatePullRequest = require('../src/updatePullrequest.js');
-// const hasChanges = require('../src/hasChanges.js');
-// const getCurrentPullRequest = require('../src/getCurrentPullRequest.js');
+// Mocked data for tests
+const mockContext = {
+    payload: {
+        repository: {
+            owner: {
+                login: 'elph',
+            },
+            name: 'repository-name',
+        },
+    },
+};
+const mockOpt = {
+    toBranch: 'staging',
+    fromBranch: 'master',
+    prBranchName: 'sync-staging-from-master',
+    githubToken: 'token',
+    reviewers: ['elph'],
+};
 
-// const repository = {
-//     owner: { login: 'elph' },
-//     name: 'repository-name'
-// };
-// const opt = {
-//     toBranch: 'staging',
-//     fromBranch: 'master',
-//     prBranchName: 'sync-staging-from-master',
-//     reviewers: []
-// };
-// let octokit = { rest: { git: {}, pulls: {} } }
-
-//describe divide our tests in sections
-describe('run', () => {
+describe('run function behavior', () => {
     beforeAll(() => {
-        // Mock getInput
-        jest.spyOn(core, 'setOutput');
-        jest.spyOn(core, 'setFailed');
-        github.context = { repository: {} };
-        //jest.spyOn(github, 'context').mockImplementation((name) => inputs[name]);
-        // jest.mock('../src/parseOptions.js', () => {
-        //     return {
-        //         toBranch: 'staging',
-        //         fromBranch: 'master',
-        //         prBranchName: 'sync-staging-from-master',
-        //         reviewers: ['elph']
-        //     };
-        // });
+        // Mock core functions
+        jest.spyOn(core, 'setOutput').mockImplementation();
+        jest.spyOn(core, 'setFailed').mockImplementation();
+
+        // Setup GitHub context
+        github.context = mockContext;
+
+        // Mock other imported functions
+        const parseOptions = require('../src/parseOptions');
+        parseOptions.mockImplementation(() => mockOpt);
+
+        const hasChanges = require('../src/hasChanges');
+        hasChanges.mockResolvedValue(true);
+
+        const getCurrentPullRequest = require('../src/getCurrentPullRequest');
+        getCurrentPullRequest.mockResolvedValue(null);
+
+        const createPullRequest = require('../src/createPullRequest');
+        createPullRequest.mockResolvedValue({
+            url: 'http://example.com/pull/1',
+            number: 1,
+        });
+
+        const updatePullRequest = require('../src/updatePullRequest');
+        updatePullRequest.mockResolvedValue();
     });
 
     beforeEach(() => {
-        // Reset inputs
-
+        jest.clearAllMocks();
     });
 
     afterAll(() => {
-
-        // Restore
-        jest.restoreAllMocks()
-    })
+        jest.restoreAllMocks();
+    });
 
     it('should do nothing when no changes', async () => {
         // Arrange
-        // octokit.rest.git.getRef = jest.fn((o) => { return { data: { object: { sha: '123456789' } } }; });
-        // octokit.rest.git.createRef = jest.fn();
-        // octokit.rest.pulls.create = jest.fn((o) => { return { data: { number: '1234' } }; });
+        const hasChanges = require('../src/hasChanges');
+        hasChanges.mockResolvedValueOnce(false);
 
         // Act
-        run();
+        await run();
 
         // Assert
-        // expect(pr).toBeTruthy();
-        // expect(octokit.rest.git.getRef)
-        //     .toBeCalledWith({
-        //         owner: 'elph',
-        //         repo: 'repository-name',
-        //         ref: 'heads/master'
-        //     });
-        // expect(octokit.rest.git.createRef)
-        //     .toBeCalledWith({
-        //         owner: 'elph',
-        //         repo: 'repository-name',
-        //         ref: 'refs/heads/sync-staging-from-master',
-        //         sha: '123456789'
-        //     });
-        // expect(octokit.rest.pulls.create)
-        //     .toBeCalledWith({
-        //         owner: 'elph',
-        //         repo: 'repository-name',
-        //         head: 'sync-staging-from-master',
-        //         base: 'staging',
-        //         title: `sync: master to staging`,
-        //         body: `New code has just landed in \`master\`, so let's bring \`staging\` up to speed!`,
-        //         draft: false
-        //     });
+        expect(core.setOutput).not.toHaveBeenCalled();
+        expect(core.setFailed).not.toHaveBeenCalled();
     });
 
-    it('should update pullrequest when exists', async () => {
+    it('should create pull request when it does not exist', async () => {
         // Arrange
+        const getCurrentPullRequest = require('../src/getCurrentPullRequest');
+        getCurrentPullRequest.mockResolvedValueOnce(null); // Simulate no existing PR
 
         // Act
+        await run();
 
         // Assert
+        const createPullRequest = require('../src/createPullRequest');
+        expect(createPullRequest).toHaveBeenCalled();
+        expect(core.setOutput).toHaveBeenCalledWith("PULL_REQUEST_URL", expect.any(String));
+        expect(core.setOutput).toHaveBeenCalledWith("PULL_REQUEST_NUMBER", expect.any(String));
     });
 
-    it('should create pullrequest when doesn\'t exists', async () => {
+    it('should update pull request when it exists', async () => {
         // Arrange
+        const getCurrentPullRequest = require('../src/getCurrentPullRequest');
+        getCurrentPullRequest.mockResolvedValueOnce({ // Simulate existing PR
+            url: 'http://example.com/pull/2',
+            number: 2,
+        });
 
         // Act
+        await run();
 
         // Assert
+        const updatePullRequest = require('../src/updatePullRequest');
+        expect(updatePullRequest).toHaveBeenCalled();
+        expect(core.setOutput).toHaveBeenCalledWith("PULL_REQUEST_URL", expect.any(String));
+        expect(core.setOutput).toHaveBeenCalledWith("PULL_REQUEST_NUMBER", expect.any(String));
     });
 });

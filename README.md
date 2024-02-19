@@ -17,3 +17,9 @@ with:
 ```
 
 See the [actions tab](https://github.com/Elph/sync-branch/actions) for runs of this action! :rocket:
+
+## Frequently Asked Questions
+
+### Why aren't pull requests created by this action triggering associated GitHub Actions?
+
+This issue arises when the default `GITHUB_TOKEN` from the environment is used. GitHub deliberately made this design decision to prevent the possibility of infinite loops when using GitHub Actions. You can find more details about this in GitHub's [documentation on triggering workflows](https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow).
