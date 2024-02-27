@@ -5,10 +5,10 @@ If multiple changes on the sourc branch happens it will update the intermediate 
 
 ## Usage
 
-You can now consume the action by referencing the v1 branch
+You can now consume the action by referencing the v2 branch
 
 ```yaml
-uses: Elph/sync-branch@v1
+uses: Elph/sync-branch@v2
 with:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   FROM_BRANCH: "master"
